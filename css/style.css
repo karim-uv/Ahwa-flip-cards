@@ -2,7 +2,6 @@
 /* =========================================================
    Ahwa Baladi — CSS 3D clickable flip cards
    Task 1, Lime Light internship. Author: Karim Hussein.
-   No JavaScript: the flip is a hidden checkbox + a <label>.
    ========================================================= */
 /* ---------- 1. Tokens ---------------------------------- */
 /* One entry per blend. The @each loop at the bottom of the
