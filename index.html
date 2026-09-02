@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ahwa Baladi — three ways to take your coffee</title>
+  <meta name="description" content="Egyptian ahwa, sold by sweetness. Tap a tin to read the tasting notes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;600&family=Noto+Naskh+Arabic:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="masthead">
+    <p class="masthead__brand">Ahwa Baladi</p>
+    <h1 class="masthead__title">Coffee is ordered by sweetness here, not by size.</h1>
+    <p class="masthead__lede">
+      In a Cairo <em>ahwa</em> you don't ask for a small or a large. You ask for how much sugar goes
+      into the pot before the water boils. Three tins, three answers. Tap one to read what's inside.
+    </p>
+  </header>
+
+  <main>
+    <ul class="shelf">
+
+      <li class="tin tin--sada">
+        <input class="tin__switch" type="checkbox" id="tin-sada">
+        <div class="tin__body">
+
+          <div class="tin__face tin__face--front">
+            <p class="tin__arabic" lang="ar" dir="rtl">سادة</p>
+            <h2 class="tin__name">Sada</h2>
+            <p class="tin__gloss">No sugar. The pot boils plain.</p>
+            <p class="tin__meter"><span class="tin__pip is-on"></span><span class="tin__pip"></span><span class="tin__pip"></span></p>
+            <p class="tin__meterLabel">Sweetness 1 of 3</p>
+            <label class="tin__toggle" for="tin-sada">Read the notes</label>
+          </div>
+
+          <div class="tin__face tin__face--back">
+            <h3 class="tin__backTitle">What you taste</h3>
+            <p class="tin__notes">
+              Dark cocoa, walnut skin, a dry finish that stays on the tongue. Drunk slowly,
+              usually with an argument about football attached.
+            </p>
+            <dl class="tin__spec">
+              <dt>Roast</dt><dd>Dark, oily</dd>
+              <dt>Grind</dt><dd>Powder, for the kanaka</dd>
+              <dt>Tin</dt><dd>250 g</dd>
+              <dt>Price</dt><dd>2 900 Ft</dd>
+            </dl>
+            <a class="tin__buy" href="#order">Add to order</a>
+            <label class="tin__toggle" for="tin-sada">Turn the tin back</label>
+          </div>
+
+        </div>
+      </li>
+
+      <li class="tin tin--mazbout">
+        <input class="tin__switch" type="checkbox" id="tin-mazbout">
+        <div class="tin__body">
+
+          <div class="tin__face tin__face--front">
+            <p class="tin__arabic" lang="ar" dir="rtl">مظبوط</p>
+            <h2 class="tin__name">Mazbout</h2>
+            <p class="tin__gloss">One spoon. The default order.</p>
+            <p class="tin__meter"><span class="tin__pip is-on"></span><span class="tin__pip is-on"></span><span class="tin__pip"></span></p>
+            <p class="tin__meterLabel">Sweetness 2 of 3</p>
+            <label class="tin__toggle" for="tin-mazbout">Read the notes</label>
+          </div>
+
+          <div class="tin__face tin__face--back">
+            <h3 class="tin__backTitle">What you taste</h3>
+            <p class="tin__notes">
+              Date syrup and toasted cardamom over the same dark base. The blend we ship most,
+              and the one to start with if you have never brewed in a kanaka.
+            </p>
+            <dl class="tin__spec">
+              <dt>Roast</dt><dd>Dark, with cardamom</dd>
+              <dt>Grind</dt><dd>Powder, for the kanaka</dd>
+              <dt>Tin</dt><dd>250 g</dd>
+              <dt>Price</dt><dd>3 100 Ft</dd>
+            </dl>
+            <a class="tin__buy" href="#order">Add to order</a>
+            <label class="tin__toggle" for="tin-mazbout">Turn the tin back</label>
+          </div>
+
+        </div>
+      </li>
+
+      <li class="tin tin--ziyada">
+        <input class="tin__switch" type="checkbox" id="tin-ziyada">
+        <div class="tin__body">
+
+          <div class="tin__face tin__face--front">
+            <p class="tin__arabic" lang="ar" dir="rtl">زيادة</p>
+            <h2 class="tin__name">Ziyada</h2>
+            <p class="tin__gloss">Two spoons, maybe three.</p>
+            <p class="tin__meter"><span class="tin__pip is-on"></span><span class="tin__pip is-on"></span><span class="tin__pip is-on"></span></p>
+            <p class="tin__meterLabel">Sweetness 3 of 3</p>
+            <label class="tin__toggle" for="tin-ziyada">Read the notes</label>
+          </div>
+
+          <div class="tin__face tin__face--back">
+            <h3 class="tin__backTitle">What you taste</h3>
+            <p class="tin__notes">
+              Burnt caramel, molasses, a thick head of foam. Ground a shade finer so the sugar
+              carries. This is the tin that disappears first at family gatherings.
+            </p>
+            <dl class="tin__spec">
+              <dt>Roast</dt><dd>Dark, caramelised</dd>
+              <dt>Grind</dt><dd>Extra fine</dd>
+              <dt>Tin</dt><dd>250 g</dd>
+              <dt>Price</dt><dd>3 100 Ft</dd>
+            </dl>
+            <a class="tin__buy" href="#order">Add to order</a>
+            <label class="tin__toggle" for="tin-ziyada">Turn the tin back</label>
+          </div>
+
+        </div>
+      </li>
+
+    </ul>
+
+    <section class="brew" id="order">
+      <h2 class="brew__title">How to brew it</h2>
+      <p class="brew__text">
+        Cold water and coffee go into the kanaka together, sugar with them. Heat slowly until the
+        foam climbs to the rim, lift it off, let it settle, return it once. Pour without stirring,
+        and leave the last centimetre in the cup.
+      </p>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <p>Roasted in Cairo. Packed and shipped from Budapest, usually within two days.</p>
+  </footer>
+
+</body>
+</html>

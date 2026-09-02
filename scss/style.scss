@@ -1,0 +1,390 @@
+@use "sass:map";
+@use "sass:color";
+
+/* =========================================================
+   Ahwa Baladi — CSS 3D clickable flip cards
+   Task 1, Lime Light internship. Author: Karim Hussein.
+   No JavaScript: the flip is a hidden checkbox + a <label>.
+   ========================================================= */
+
+/* ---------- 1. Tokens ---------------------------------- */
+
+// Everything is pulled off a roasted bean: the dark shell, the
+// oily sheen on it, and the crema it makes in the cup.
+$espresso:  #1b1009; // page, darkest point of the roast
+$roast:     #33200f; // card back, body of the bean
+$chestnut:  #56331b; // the warm light falling on the pile
+$crema:     #e7cfa6; // card front, foam on a fresh pour
+$foam:      #f7e9cf; // headings, the pale lip of the crema
+$bean-ink:  #291810; // text on crema
+$gold:      #d19a4e; // roasted sugar, the one bright note
+
+$flip-duration: 780ms;
+$flip-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+
+$tin-radius: 16px 16px 5px 5px; // squat like a coffee tin, not a SaaS card
+$measure: 62ch;
+
+/* One entry per blend. The @each loop at the bottom of the
+   card block turns this into the per-tin colour variants. */
+$blends: (
+  sada: (
+    accent: #b07f4b, // cinnamon roast
+    seal: #4a2e17,
+  ),
+  mazbout: (
+    accent: #d19a4e, // roasted sugar
+    seal: #6b4514,
+  ),
+  ziyada: (
+    accent: #a8471f, // scorched caramel
+    seal: #58230f,
+  ),
+);
+
+/* ---------- 2. Mixins ---------------------------------- */
+
+@mixin face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.4rem 1.3rem;
+  border-radius: $tin-radius;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; // Safari still wants the prefix
+  overflow: hidden;
+}
+
+/* The foil band that runs across every tin lid. */
+@mixin foil-band($from, $to) {
+  background-image: linear-gradient(
+    100deg,
+    $from 0%,
+    color.adjust($to, $lightness: 12%) 45%,
+    $from 100%
+  );
+}
+
+@mixin ring {
+  outline: 3px solid $gold;
+  outline-offset: 4px;
+}
+
+/* ---------- 3. Page ------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 5vw, 4rem) 3rem;
+  background-color: $espresso;
+  background-image:
+    radial-gradient(circle at 18% 8%, $roast 0%, transparent 55%),
+    radial-gradient(circle at 88% 92%, $chestnut 0%, transparent 45%);
+  color: $crema;
+  font-family: "Karla", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.masthead {
+  max-width: $measure;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+
+  &__brand {
+    margin: 0 0 1.8rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    color: $gold;
+  }
+
+  &__title {
+    margin: 0 0 1rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2.1rem, 6vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.08;
+    color: $foam;
+  }
+
+  &__lede {
+    margin: 0;
+    max-width: 52ch;
+    color: color.adjust($crema, $alpha: -0.2);
+
+    em {
+      font-family: "Fraunces", Georgia, serif;
+      font-style: italic;
+    }
+  }
+}
+
+/* ---------- 4. The shelf ------------------------------- */
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.2rem);
+  max-width: 62rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- 5. One tin --------------------------------- */
+
+.tin {
+  perspective: 1400px;
+
+  /* The checkbox is the state. Kept reachable by keyboard,
+     just moved out of sight. */
+  &__switch {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__body {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    min-height: 330px;
+    transform-style: preserve-3d;
+    transition: transform $flip-duration $flip-ease;
+  }
+
+  &__switch:checked ~ &__body {
+    transform: rotateY(180deg);
+  }
+
+  &__switch:focus-visible ~ &__body {
+    @include ring;
+    border-radius: $tin-radius;
+  }
+
+  /* --- faces --- */
+
+  &__face {
+    @include face;
+
+    &--front {
+      color: $bean-ink;
+      background-color: $crema;
+      box-shadow:
+        inset 0 -70px 60px -60px rgba(0, 0, 0, 0.35),
+        0 18px 30px -20px rgba(0, 0, 0, 0.6);
+
+      /* the lid band */
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 12px;
+      }
+    }
+
+    &--back {
+      transform: rotateY(180deg);
+      color: $foam;
+      background-color: $roast;
+      box-shadow: 0 18px 30px -20px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  /* Only the face pointing at the reader accepts clicks. */
+  &__face--back {
+    pointer-events: none;
+  }
+
+  &__switch:checked ~ &__body &__face--front {
+    pointer-events: none;
+  }
+
+  &__switch:checked ~ &__body &__face--back {
+    pointer-events: auto;
+  }
+
+  /* --- front content --- */
+
+  &__arabic {
+    margin: 0.2rem 0 0.4rem;
+    font-family: "Noto Naskh Arabic", serif;
+    font-size: 2.9rem;
+    line-height: 1.25;
+    color: var(--seal);
+  }
+
+  &__name {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  &__gloss {
+    margin: 0.35rem 0 0;
+    font-size: 0.95rem;
+    color: color.adjust($bean-ink, $alpha: -0.25);
+  }
+
+  &__meter {
+    display: flex;
+    gap: 7px;
+    margin: auto 0 0.5rem;
+  }
+
+  &__pip {
+    width: 13px;
+    height: 13px;
+    border: 2px solid var(--seal);
+    border-radius: 50%;
+
+    &.is-on {
+      background-color: var(--accent);
+    }
+  }
+
+  &__meterLabel {
+    margin: 0 0 1.1rem;
+    font-size: 0.8rem;
+    color: color.adjust($bean-ink, $alpha: -0.4);
+  }
+
+  /* --- back content --- */
+
+  &__backTitle {
+    margin: 0 0 0.5rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  &__notes {
+    margin: 0 0 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  &__spec {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.9rem;
+    margin: 0 0 auto;
+    font-size: 0.85rem;
+
+    dt {
+      color: color.adjust($crema, $alpha: -0.4);
+    }
+
+    dd {
+      margin: 0;
+      text-align: right;
+    }
+  }
+
+  /* --- controls --- */
+
+  &__toggle,
+  &__buy {
+    display: block;
+    padding: 0.62rem 1rem;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 160ms ease, background-color 160ms ease;
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &__toggle {
+    color: $bean-ink;
+    background-color: var(--accent);
+  }
+
+  &__face--back &__toggle {
+    margin-top: 0.55rem;
+    color: $foam;
+    background-color: transparent;
+    border: 1px solid color.adjust($crema, $alpha: -0.6);
+  }
+
+  &__buy {
+    color: $espresso;
+    background-color: $crema;
+
+    &:hover {
+      background-color: $foam;
+    }
+  }
+
+  /* --- per-blend variants, generated from $blends --- */
+
+  @each $name, $tokens in $blends {
+    &--#{$name} {
+      --accent: #{map.get($tokens, accent)};
+      --seal: #{map.get($tokens, seal)};
+
+      .tin__face--front::before {
+        @include foil-band(map.get($tokens, seal), map.get($tokens, accent));
+      }
+    }
+  }
+}
+
+/* ---------- 6. Closing section ------------------------- */
+
+.brew {
+  max-width: 46ch;
+  margin: clamp(3rem, 8vw, 5rem) 0 0;
+
+  &__title {
+    margin: 0 0 0.6rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: $foam;
+  }
+
+  &__text {
+    margin: 0;
+    color: color.adjust($crema, $alpha: -0.15);
+  }
+}
+
+.colophon {
+  margin-top: 3.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid color.adjust($crema, $alpha: -0.85);
+  font-size: 0.85rem;
+  color: color.adjust($crema, $alpha: -0.45);
+
+  p {
+    margin: 0;
+  }
+}
+
+/* ---------- 7. Motion preference ----------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tin__body,
+  .tin__toggle,
+  .tin__buy {
+    transition-duration: 1ms;
+  }
+}

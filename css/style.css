@@ -1,0 +1,308 @@
+@charset "UTF-8";
+/* =========================================================
+   Ahwa Baladi — CSS 3D clickable flip cards
+   Task 1, Lime Light internship. Author: Karim Hussein.
+   No JavaScript: the flip is a hidden checkbox + a <label>.
+   ========================================================= */
+/* ---------- 1. Tokens ---------------------------------- */
+/* One entry per blend. The @each loop at the bottom of the
+   card block turns this into the per-tin colour variants. */
+/* ---------- 2. Mixins ---------------------------------- */
+/* The foil band that runs across every tin lid. */
+/* ---------- 3. Page ------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 5vw, 4rem) 3rem;
+  background-color: #1b1009;
+  background-image: radial-gradient(circle at 18% 8%, #33200f 0%, transparent 55%), radial-gradient(circle at 88% 92%, #56331b 0%, transparent 45%);
+  color: #e7cfa6;
+  font-family: "Karla", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.masthead {
+  max-width: 62ch;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+.masthead__brand {
+  margin: 0 0 1.8rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: #d19a4e;
+}
+.masthead__title {
+  margin: 0 0 1rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(2.1rem, 6vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.08;
+  color: #f7e9cf;
+}
+.masthead__lede {
+  margin: 0;
+  max-width: 52ch;
+  color: rgba(231, 207, 166, 0.8);
+}
+.masthead__lede em {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+}
+
+/* ---------- 4. The shelf ------------------------------- */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.2rem);
+  max-width: 62rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- 5. One tin --------------------------------- */
+.tin {
+  perspective: 1400px;
+  /* The checkbox is the state. Kept reachable by keyboard,
+     just moved out of sight. */
+}
+.tin__switch {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.tin__body {
+  position: relative;
+  aspect-ratio: 3/4;
+  min-height: 330px;
+  transform-style: preserve-3d;
+  transition: transform 780ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.tin__switch:checked ~ .tin__body {
+  transform: rotateY(180deg);
+}
+.tin__switch:focus-visible ~ .tin__body {
+  outline: 3px solid #d19a4e;
+  outline-offset: 4px;
+  border-radius: 16px 16px 5px 5px;
+}
+.tin {
+  /* --- faces --- */
+}
+.tin__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.4rem 1.3rem;
+  border-radius: 16px 16px 5px 5px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.tin__face--front {
+  color: #291810;
+  background-color: #e7cfa6;
+  box-shadow: inset 0 -70px 60px -60px rgba(0, 0, 0, 0.35), 0 18px 30px -20px rgba(0, 0, 0, 0.6);
+  /* the lid band */
+}
+.tin__face--front::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+.tin__face--back {
+  transform: rotateY(180deg);
+  color: #f7e9cf;
+  background-color: #33200f;
+  box-shadow: 0 18px 30px -20px rgba(0, 0, 0, 0.6);
+}
+.tin {
+  /* Only the face pointing at the reader accepts clicks. */
+}
+.tin__face--back {
+  pointer-events: none;
+}
+.tin__switch:checked ~ .tin__body .tin__face--front {
+  pointer-events: none;
+}
+.tin__switch:checked ~ .tin__body .tin__face--back {
+  pointer-events: auto;
+}
+.tin {
+  /* --- front content --- */
+}
+.tin__arabic {
+  margin: 0.2rem 0 0.4rem;
+  font-family: "Noto Naskh Arabic", serif;
+  font-size: 2.9rem;
+  line-height: 1.25;
+  color: var(--seal);
+}
+.tin__name {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.tin__gloss {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: rgba(41, 24, 16, 0.75);
+}
+.tin__meter {
+  display: flex;
+  gap: 7px;
+  margin: auto 0 0.5rem;
+}
+.tin__pip {
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--seal);
+  border-radius: 50%;
+}
+.tin__pip.is-on {
+  background-color: var(--accent);
+}
+.tin__meterLabel {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  color: rgba(41, 24, 16, 0.6);
+}
+.tin {
+  /* --- back content --- */
+}
+.tin__backTitle {
+  margin: 0 0 0.5rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.tin__notes {
+  margin: 0 0 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.tin__spec {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.9rem;
+  margin: 0 0 auto;
+  font-size: 0.85rem;
+}
+.tin__spec dt {
+  color: rgba(231, 207, 166, 0.6);
+}
+.tin__spec dd {
+  margin: 0;
+  text-align: right;
+}
+.tin {
+  /* --- controls --- */
+}
+.tin__toggle, .tin__buy {
+  display: block;
+  padding: 0.62rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+.tin__toggle:active, .tin__buy:active {
+  transform: translateY(1px);
+}
+.tin__toggle {
+  color: #291810;
+  background-color: var(--accent);
+}
+.tin__face--back .tin__toggle {
+  margin-top: 0.55rem;
+  color: #f7e9cf;
+  background-color: transparent;
+  border: 1px solid rgba(231, 207, 166, 0.4);
+}
+.tin__buy {
+  color: #1b1009;
+  background-color: #e7cfa6;
+}
+.tin__buy:hover {
+  background-color: #f7e9cf;
+}
+.tin {
+  /* --- per-blend variants, generated from $blends --- */
+}
+.tin--sada {
+  --accent: #b07f4b;
+  --seal: #4a2e17;
+}
+.tin--sada .tin__face--front::before {
+  background-image: linear-gradient(100deg, #4a2e17 0%, rgb(76.8221232716%, 61.6792438091%, 45.6092492774%) 45%, #4a2e17 100%);
+}
+.tin--mazbout {
+  --accent: #d19a4e;
+  --seal: #6b4514;
+}
+.tin--mazbout .tin__face--front::before {
+  background-image: linear-gradient(100deg, #6b4514 0%, rgb(86.9114569595%, 71.2621120197%, 49.6375626484%) 45%, #6b4514 100%);
+}
+.tin--ziyada {
+  --accent: #a8471f;
+  --seal: #58230f;
+}
+.tin--ziyada .tin__face--front::before {
+  background-image: linear-gradient(100deg, #58230f 0%, rgb(84.739777318%, 36.9900482806%, 17.2994383683%) 45%, #58230f 100%);
+}
+
+/* ---------- 6. Closing section ------------------------- */
+.brew {
+  max-width: 46ch;
+  margin: clamp(3rem, 8vw, 5rem) 0 0;
+}
+.brew__title {
+  margin: 0 0 0.6rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #f7e9cf;
+}
+.brew__text {
+  margin: 0;
+  color: rgba(231, 207, 166, 0.85);
+}
+
+.colophon {
+  margin-top: 3.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(231, 207, 166, 0.15);
+  font-size: 0.85rem;
+  color: rgba(231, 207, 166, 0.55);
+}
+.colophon p {
+  margin: 0;
+}
+
+/* ---------- 7. Motion preference ----------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .tin__body,
+  .tin__toggle,
+  .tin__buy {
+    transition-duration: 1ms;
+  }
+}
