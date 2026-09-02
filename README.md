@@ -3,7 +3,7 @@
 Task 1 of the Lime Light internship programme. A small landing page advertising a fictional
 Egyptian coffee brand, built around three clickable 3D flip cards.
 
-**Live site:** https://<your-github-username>.github.io/ahwa-flip-cards/
+**Live site:** https://karim-uv.github.io/Ahwa-flip-cards/
 
 ## The idea
 
